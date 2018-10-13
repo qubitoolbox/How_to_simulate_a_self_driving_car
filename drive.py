@@ -87,12 +87,10 @@ def telemetry(sid, data):
         
         sio.emit('manual', data={}, skip_sid=True)
 
-
 @sio.on('connect')
 def connect(sid, environ):
     print("connect ", sid)
     send_control(0, 0)
-
 
 def send_control(steering_angle, throttle):
     sio.emit(
@@ -102,7 +100,6 @@ def send_control(steering_angle, throttle):
             'throttle': throttle.__str__()
         },
         skip_sid=True)
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Remote Driving')
