@@ -20,7 +20,6 @@ import os
 #for debugging, allows for reproducible (deterministic) results 
 np.random.seed(0)
 
-
 def load_data(args):
     """
     Load training data and split it into training and validation set
@@ -39,7 +38,6 @@ def load_data(args):
     X_train, X_valid, y_train, y_valid = train_test_split(X, y, test_size=args.test_size, random_state=0)
 
     return X_train, X_valid, y_train, y_valid
-
 
 def build_model(args):
     """
@@ -77,7 +75,6 @@ def build_model(args):
     model.summary()
 
     return model
-
 
 def train_model(model, args, X_train, X_valid, y_train, y_valid):
     """
@@ -127,7 +124,6 @@ def s2b(s):
     s = s.lower()
     return s == 'true' or s == 'yes' or s == 'y' or s == '1'
 
-
 def main():
     """
     Load train/validation data set and train the model
@@ -158,7 +154,5 @@ def main():
     #train model on data, it saves as model.h5 
     train_model(model, args, *data)
 
-
 if __name__ == '__main__':
     main()
-
