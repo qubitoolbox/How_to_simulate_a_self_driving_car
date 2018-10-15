@@ -1,11 +1,10 @@
+#import libraries
 import cv2, os
 import numpy as np
 import matplotlib.image as mpimg
 
-
 IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS = 66, 200, 3
 INPUT_SHAPE = (IMAGE_HEIGHT, IMAGE_WIDTH, IMAGE_CHANNELS)
-
 
 def load_image(data_dir, image_file):
     """
@@ -13,13 +12,11 @@ def load_image(data_dir, image_file):
     """
     return mpimg.imread(os.path.join(data_dir, image_file.strip()))
 
-
 def crop(image):
     """
     Crop the image (removing the sky at the top and the car front at the bottom)
     """
     return image[60:-25, :, :] # remove the sky and the car front
-
 
 def resize(image):
     """
@@ -27,13 +24,11 @@ def resize(image):
     """
     return cv2.resize(image, (IMAGE_WIDTH, IMAGE_HEIGHT), cv2.INTER_AREA)
 
-
 def rgb2yuv(image):
     """
     Convert the image from RGB to YUV (This is what the NVIDIA model does)
     """
     return cv2.cvtColor(image, cv2.COLOR_RGB2YUV)
-
 
 def preprocess(image):
     """
@@ -43,7 +38,6 @@ def preprocess(image):
     image = resize(image)
     image = rgb2yuv(image)
     return image
-
 
 def choose_image(data_dir, center, left, right, steering_angle):
     """
@@ -57,7 +51,6 @@ def choose_image(data_dir, center, left, right, steering_angle):
         return load_image(data_dir, right), steering_angle - 0.2
     return load_image(data_dir, center), steering_angle
 
-
 def random_flip(image, steering_angle):
     """
     Randomly flipt the image left <-> right, and adjust the steering angle.
@@ -66,7 +59,6 @@ def random_flip(image, steering_angle):
         image = cv2.flip(image, 1)
         steering_angle = -steering_angle
     return image, steering_angle
-
 
 def random_translate(image, steering_angle, range_x, range_y):
     """
@@ -79,7 +71,6 @@ def random_translate(image, steering_angle, range_x, range_y):
     height, width = image.shape[:2]
     image = cv2.warpAffine(image, trans_m, (width, height))
     return image, steering_angle
-
 
 def random_shadow(image):
     """
@@ -108,7 +99,6 @@ def random_shadow(image):
     hls[:, :, 1][cond] = hls[:, :, 1][cond] * s_ratio
     return cv2.cvtColor(hls, cv2.COLOR_HLS2RGB)
 
-
 def random_brightness(image):
     """
     Randomly adjust brightness of the image.
@@ -118,7 +108,6 @@ def random_brightness(image):
     ratio = 1.0 + 0.4 * (np.random.rand() - 0.5)
     hsv[:,:,2] =  hsv[:,:,2] * ratio
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
-
 
 def augument(data_dir, center, left, right, steering_angle, range_x=100, range_y=10):
     """
@@ -131,7 +120,6 @@ def augument(data_dir, center, left, right, steering_angle, range_x=100, range_y
     image = random_shadow(image)
     image = random_brightness(image)
     return image, steering_angle
-
 
 def batch_generator(data_dir, image_paths, steering_angles, batch_size, is_training):
     """
@@ -156,4 +144,3 @@ def batch_generator(data_dir, image_paths, steering_angles, batch_size, is_train
             if i == batch_size:
                 break
         yield images, steers
-
